@@ -3,7 +3,8 @@ part of '../main.dart';
 String get _apiBaseUrl {
   const configured = String.fromEnvironment('API_BASE_URL');
   if (configured.isNotEmpty) return configured;
-  if (Platform.isAndroid) return 'http://192.168.0.181:3000/api/v1';
+  // Android emulator can reach the host machine through 10.0.2.2.
+  if (Platform.isAndroid) return 'http://10.0.2.2:3000/api/v1';
   return 'http://127.0.0.1:3000/api/v1';
 }
 
