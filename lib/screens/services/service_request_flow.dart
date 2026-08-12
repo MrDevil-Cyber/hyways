@@ -126,7 +126,7 @@ class _ServiceRequestFlowState extends State<_ServiceRequestFlow> {
       if (mounted) {
         setState(
           () => _error =
-              'Service request submit nahi ho paayi. Backend connection check karke dobara try karein.',
+              'The service request could not be submitted. Check the server connection and try again.',
         );
       }
     } finally {

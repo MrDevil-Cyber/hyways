@@ -69,7 +69,7 @@ class _MachineScanFlowState extends State<_MachineScanFlow> {
       if (mounted) {
         setState(
           () => _error =
-              'Scan request save nahi ho paayi. Backend connection check karke dobara try karein.',
+              'The scan request could not be saved. Check the server connection and try again.',
         );
       }
     } finally {

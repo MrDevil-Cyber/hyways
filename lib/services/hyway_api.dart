@@ -353,7 +353,7 @@ class HywayApi extends ChangeNotifier {
       _session = null;
       _notifySafely();
       throw const ApiException(
-        'Secure login session save nahi ho paayi. Please try again.',
+        'Your secure login session could not be saved. Please try again.',
       );
     }
     if (expectedRevision != null && expectedRevision != _authRevision) {

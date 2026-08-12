@@ -91,7 +91,7 @@ class _SpacePlannerFlowState extends State<_SpacePlannerFlow> {
       if (mounted) {
         setState(
           () => _error =
-              'Space assessment create nahi ho paaya. Backend connection check karke dobara try karein.',
+              'The space assessment could not be created. Check the server connection and try again.',
         );
       }
     } finally {
@@ -134,7 +134,7 @@ class _SpacePlannerFlowState extends State<_SpacePlannerFlow> {
       if (mounted) {
         setState(
           () => _error =
-              'Engineer review request submit nahi ho paayi. Please try again.',
+              'The engineer review request could not be submitted. Please try again.',
         );
       }
     } finally {
@@ -219,7 +219,7 @@ class _SpacePlannerFlowState extends State<_SpacePlannerFlow> {
                           ),
                           const SizedBox(height: 12),
                           const Text(
-                            'Room ke actual clear floor space ko enter karein, walls aur obstacles ko ignore karke.',
+                            'Enter the room’s clear floor space. Do not include walls or obstacles.',
                             style: TextStyle(
                               color: Colors.white54,
                               fontSize: 11.2,
