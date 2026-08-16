@@ -13,6 +13,11 @@ class AuthSession {
     required this.userId,
     required this.name,
     required this.email,
+    this.phone,
+    this.company,
+    this.jobTitle,
+    this.city,
+    this.state,
     required this.role,
     required this.accessToken,
     required this.refreshToken,
@@ -21,6 +26,11 @@ class AuthSession {
   final String userId;
   final String name;
   final String email;
+  final String? phone;
+  final String? company;
+  final String? jobTitle;
+  final String? city;
+  final String? state;
   final String role;
   final String accessToken;
   final String refreshToken;
@@ -40,6 +50,11 @@ class AuthSession {
       userId: requiredString(user, 'id'),
       name: requiredString(user, 'name'),
       email: requiredString(user, 'email'),
+      phone: user['phone']?.toString().trim(),
+      company: user['company']?.toString().trim(),
+      jobTitle: user['jobTitle']?.toString().trim(),
+      city: user['city']?.toString().trim(),
+      state: user['state']?.toString().trim(),
       role: requiredString(user, 'role'),
       accessToken: requiredString(json, 'accessToken'),
       refreshToken: requiredString(json, 'refreshToken'),
@@ -50,6 +65,11 @@ class AuthSession {
     userId: stored.userId,
     name: stored.name,
     email: stored.email,
+    phone: stored.phone,
+    company: stored.company,
+    jobTitle: stored.jobTitle,
+    city: stored.city,
+    state: stored.state,
     role: stored.role,
     accessToken: stored.accessToken,
     refreshToken: stored.refreshToken,
@@ -59,6 +79,11 @@ class AuthSession {
     userId: userId,
     name: name,
     email: email,
+    phone: phone,
+    company: company,
+    jobTitle: jobTitle,
+    city: city,
+    state: state,
     role: role,
     accessToken: accessToken,
     refreshToken: refreshToken,
@@ -68,6 +93,11 @@ class AuthSession {
     userId: user['id']?.toString() ?? userId,
     name: user['name']?.toString() ?? name,
     email: user['email']?.toString() ?? email,
+    phone: user['phone']?.toString().trim() ?? phone,
+    company: user['company']?.toString().trim() ?? company,
+    jobTitle: user['jobTitle']?.toString().trim() ?? jobTitle,
+    city: user['city']?.toString().trim() ?? city,
+    state: user['state']?.toString().trim() ?? state,
     role: user['role']?.toString() ?? role,
     accessToken: accessToken,
     refreshToken: refreshToken,
@@ -131,11 +161,21 @@ class HywayApi extends ChangeNotifier {
   Future<AuthSession> register({
     required String name,
     required String email,
+    required String phone,
+    required String company,
+    required String jobTitle,
+    required String city,
+    required String state,
     required String password,
   }) async {
     final json = await _post('/auth/register', {
       'name': name.trim(),
       'email': email.trim(),
+      'phone': phone.trim(),
+      'company': company.trim(),
+      'jobTitle': jobTitle.trim(),
+      'city': city.trim(),
+      'state': state.trim(),
       'password': password,
     });
     return _acceptAuthResponse(json);

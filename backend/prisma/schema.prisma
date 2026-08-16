@@ -66,6 +66,11 @@ model User {
   id               String            @id @default(cuid())
   name             String
   email            String            @unique
+  phone            String?
+  company          String?
+  jobTitle         String?
+  city             String?
+  state            String?
   passwordHash     String
   role             Role              @default(CUSTOMER)
   refreshTokenHash String?

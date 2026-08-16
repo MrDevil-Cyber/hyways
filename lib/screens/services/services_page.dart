@@ -156,6 +156,11 @@ class _ServicesAuthGateState extends State<_ServicesAuthGate> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _companyController = TextEditingController();
+  final _jobTitleController = TextEditingController();
+  final _cityController = TextEditingController();
+  final _stateController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _register = false;
   bool _obscurePassword = true;
@@ -166,6 +171,11 @@ class _ServicesAuthGateState extends State<_ServicesAuthGate> {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
+    _phoneController.dispose();
+    _companyController.dispose();
+    _jobTitleController.dispose();
+    _cityController.dispose();
+    _stateController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -202,6 +212,11 @@ class _ServicesAuthGateState extends State<_ServicesAuthGate> {
         await widget.api.register(
           name: _nameController.text.trim(),
           email: _emailController.text.trim().toLowerCase(),
+          phone: _phoneController.text.trim(),
+          company: _companyController.text.trim(),
+          jobTitle: _jobTitleController.text.trim(),
+          city: _cityController.text.trim(),
+          state: _stateController.text.trim(),
           password: _passwordController.text,
         );
       } else {
@@ -332,18 +347,23 @@ class _ServicesAuthGateState extends State<_ServicesAuthGate> {
                           child: _register
                               ? Padding(
                                   padding: const EdgeInsets.only(bottom: 12),
-                                  child: _ServiceTextField(
-                                    controller: _nameController,
-                                    label: 'Full name',
-                                    hint: 'Enter your name',
-                                    icon: Icons.person_outline,
-                                    textCapitalization:
-                                        TextCapitalization.words,
-                                    textInputAction: TextInputAction.next,
-                                    validator: (value) =>
-                                        (value?.trim().length ?? 0) < 2
-                                        ? 'Please enter your full name'
-                                        : null,
+                                  child: Column(
+                                    children: [
+                                      _ServiceTextField(
+                                        controller: _nameController,
+                                        label: 'Full name',
+                                        hint: 'Enter your name',
+                                        icon: Icons.person_outline,
+                                        textCapitalization:
+                                            TextCapitalization.words,
+                                        textInputAction: TextInputAction.next,
+                                        validator: (value) =>
+                                            (value?.trim().length ?? 0) < 2
+                                            ? 'Please enter your full name'
+                                            : null,
+                                      ),
+                                      const SizedBox(height: 12),
+                                    ],
                                   ),
                                 )
                               : const SizedBox.shrink(),
@@ -366,6 +386,97 @@ class _ServicesAuthGateState extends State<_ServicesAuthGate> {
                           },
                         ),
                         const SizedBox(height: 12),
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 220),
+                          curve: Curves.easeOutCubic,
+                          child: _register
+                              ? Column(
+                                  children: [
+                                    _ServiceTextField(
+                                      controller: _phoneController,
+                                      label: 'Mobile number',
+                                      hint: '+91 98765 43210',
+                                      icon: Icons.phone_outlined,
+                                      keyboardType: TextInputType.phone,
+                                      textInputAction: TextInputAction.next,
+                                      validator: (value) =>
+                                          RegExp(
+                                            r'^[0-9+()\-\s]{7,20}$',
+                                          ).hasMatch(value?.trim() ?? '')
+                                          ? null
+                                          : 'Please enter a valid mobile number',
+                                    ),
+                                    const SizedBox(height: 12),
+                                    _ServiceTextField(
+                                      controller: _companyController,
+                                      label: 'Company name',
+                                      hint: 'Your organisation',
+                                      icon: Icons.business_outlined,
+                                      textCapitalization:
+                                          TextCapitalization.words,
+                                      textInputAction: TextInputAction.next,
+                                      validator: (value) =>
+                                          (value?.trim().length ?? 0) < 2
+                                          ? 'Please enter your company name'
+                                          : null,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    _ServiceTextField(
+                                      controller: _jobTitleController,
+                                      label: 'Job title',
+                                      hint: 'For example, Plant Manager',
+                                      icon: Icons.badge_outlined,
+                                      textCapitalization:
+                                          TextCapitalization.words,
+                                      textInputAction: TextInputAction.next,
+                                      validator: (value) =>
+                                          (value?.trim().length ?? 0) < 2
+                                          ? 'Please enter your job title'
+                                          : null,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: _ServiceTextField(
+                                            controller: _cityController,
+                                            label: 'City',
+                                            hint: 'Your city',
+                                            icon: Icons.location_city_outlined,
+                                            textCapitalization:
+                                                TextCapitalization.words,
+                                            textInputAction:
+                                                TextInputAction.next,
+                                            validator: (value) =>
+                                                (value?.trim().length ?? 0) < 2
+                                                ? 'Enter your city'
+                                                : null,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: _ServiceTextField(
+                                            controller: _stateController,
+                                            label: 'State',
+                                            hint: 'Your state',
+                                            icon: Icons.map_outlined,
+                                            textCapitalization:
+                                                TextCapitalization.words,
+                                            textInputAction:
+                                                TextInputAction.next,
+                                            validator: (value) =>
+                                                (value?.trim().length ?? 0) < 2
+                                                ? 'Enter your state'
+                                                : null,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 12),
+                                  ],
+                                )
+                              : const SizedBox.shrink(),
+                        ),
                         _ServiceTextField(
                           controller: _passwordController,
                           label: 'Password',
@@ -699,37 +810,74 @@ class _ServicesDashboard extends StatelessWidget {
                         onSelected: (value) {
                           if (value == 'logout') onLogout();
                         },
+                        offset: const Offset(0, 46),
+                        constraints: const BoxConstraints(minWidth: 270),
                         color: panel,
-                        itemBuilder: (_) => const [
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          side: const BorderSide(color: Colors.white12),
+                        ),
+                        itemBuilder: (_) => [
+                          PopupMenuItem(
+                            height: 0,
+                            padding: EdgeInsets.zero,
+                            child: _ServiceProfileSummary(session: session),
+                          ),
+                          const PopupMenuDivider(height: 1),
                           PopupMenuItem(
                             value: 'logout',
                             child: Row(
                               children: [
-                                Icon(Icons.logout, size: 18),
+                                Icon(
+                                  Icons.logout_rounded,
+                                  color: red,
+                                  size: 18,
+                                ),
                                 SizedBox(width: 9),
-                                Text('Log out'),
+                                Text(
+                                  'Log out',
+                                  style: TextStyle(fontWeight: FontWeight.w700),
+                                ),
                               ],
                             ),
                           ),
                         ],
-                        child: Container(
-                          width: 38,
-                          height: 38,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: panel,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white12),
-                          ),
-                          child: Text(
-                            session.name.trim().isEmpty
-                                ? 'H'
-                                : session.name.trim()[0].toUpperCase(),
-                            style: const TextStyle(
-                              color: red,
-                              fontWeight: FontWeight.w900,
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Container(
+                              width: 38,
+                              height: 38,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: panel,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white12),
+                              ),
+                              child: Text(
+                                session.name.trim().isEmpty
+                                    ? 'H'
+                                    : session.name.trim()[0].toUpperCase(),
+                                style: const TextStyle(
+                                  color: red,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
                             ),
-                          ),
+                            Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF4CD68B),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: panel, width: 2),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -906,6 +1054,136 @@ class _ServicesDashboard extends StatelessWidget {
         ),
       ),
     ],
+  );
+}
+
+class _ServiceProfileSummary extends StatelessWidget {
+  const _ServiceProfileSummary({required this.session});
+
+  final _AuthSession session;
+
+  String get _initial =>
+      session.name.trim().isEmpty ? 'H' : session.name.trim()[0].toUpperCase();
+
+  String get _role {
+    final role = session.role.trim();
+    if (role.isEmpty) return 'HYWAY customer';
+    return '${role[0].toUpperCase()}${role.substring(1)} account';
+  }
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: 270,
+    padding: const EdgeInsets.all(16),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 42,
+          height: 42,
+          alignment: Alignment.center,
+          decoration: const BoxDecoration(color: red, shape: BoxShape.circle),
+          child: Text(
+            _initial,
+            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                session.name.trim().isEmpty
+                    ? 'HYWAY user'
+                    : session.name.trim(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 3),
+              Text(
+                session.email,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: Colors.white54, fontSize: 11.5),
+              ),
+              const SizedBox(height: 9),
+              if (session.company?.isNotEmpty ?? false)
+                _ProfileDetail(
+                  icon: Icons.business_outlined,
+                  value: session.company!,
+                ),
+              if (session.jobTitle?.isNotEmpty ?? false)
+                _ProfileDetail(
+                  icon: Icons.badge_outlined,
+                  value: session.jobTitle!,
+                ),
+              if (session.phone?.isNotEmpty ?? false)
+                _ProfileDetail(
+                  icon: Icons.phone_outlined,
+                  value: session.phone!,
+                ),
+              if ((session.city?.isNotEmpty ?? false) ||
+                  (session.state?.isNotEmpty ?? false))
+                _ProfileDetail(
+                  icon: Icons.location_on_outlined,
+                  value: [session.city, session.state]
+                      .whereType<String>()
+                      .where((value) => value.isNotEmpty)
+                      .join(', '),
+                ),
+              const SizedBox(height: 9),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0x1AE31B23),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  _role.toUpperCase(),
+                  style: const TextStyle(
+                    color: red,
+                    fontSize: 8.5,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: .6,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class _ProfileDetail extends StatelessWidget {
+  const _ProfileDetail({required this.icon, required this.value});
+
+  final IconData icon;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: 5),
+    child: Row(
+      children: [
+        Icon(icon, color: Colors.white38, size: 14),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: Colors.white70, fontSize: 10.5),
+          ),
+        ),
+      ],
+    ),
   );
 }
 

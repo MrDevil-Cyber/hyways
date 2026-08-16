@@ -10,6 +10,11 @@ type FakeUser = {
   id: string;
   name: string;
   email: string;
+  phone: string | null;
+  company: string | null;
+  jobTitle: string | null;
+  city: string | null;
+  state: string | null;
   passwordHash: string;
   role: Role;
 };
@@ -43,6 +48,11 @@ describe('AuthService persistent sessions', () => {
       id: 'user-1',
       name: 'HYWAY Customer',
       email: 'customer@example.com',
+      phone: '+91 98765 43210',
+      company: 'HYWAY Customer Co.',
+      jobTitle: 'Plant Manager',
+      city: 'Pune',
+      state: 'Maharashtra',
       passwordHash: await bcrypt.hash('Password123!', 4),
       role: Role.CUSTOMER,
     };
@@ -191,6 +201,11 @@ describe('AuthService persistent sessions', () => {
       id: user.id,
       name: user.name,
       email: user.email,
+      phone: user.phone,
+      company: user.company,
+      jobTitle: user.jobTitle,
+      city: user.city,
+      state: user.state,
       role: user.role,
     });
   });
@@ -205,6 +220,11 @@ function safeUser(user: FakeUser) {
     id: user.id,
     name: user.name,
     email: user.email,
+    phone: user.phone,
+    company: user.company,
+    jobTitle: user.jobTitle,
+    city: user.city,
+    state: user.state,
     role: user.role,
   };
 }

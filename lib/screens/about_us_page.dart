@@ -507,13 +507,33 @@ class _CompanySummary extends StatelessWidget {
         const SizedBox(height: 13),
         const Row(
           children: [
-            _SocialBadge('f'),
+            _SocialBadge(
+              assetPath: 'assets/icons/social/facebook.svg',
+              label: 'Facebook',
+              color: Color(0xFF1877F2),
+            ),
             SizedBox(width: 7),
-            _SocialBadge('X'),
+            _SocialBadge(
+              assetPath: 'assets/icons/social/x.svg',
+              label: 'X',
+              color: Color(0xFF000000),
+            ),
             SizedBox(width: 7),
-            _SocialBadge('IG'),
+            _SocialBadge(
+              assetPath: 'assets/icons/social/instagram.svg',
+              label: 'Instagram',
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFFFEDA75), Color(0xFFD62976), Color(0xFF4F5BD5)],
+              ),
+            ),
             SizedBox(width: 7),
-            _SocialBadge('in'),
+            _SocialBadge(
+              assetPath: 'assets/icons/social/linkedin.svg',
+              label: 'LinkedIn',
+              color: Color(0xFF0A66C2),
+            ),
           ],
         ),
       ],
@@ -846,22 +866,35 @@ class _InfoDetail extends StatelessWidget {
 }
 
 class _SocialBadge extends StatelessWidget {
-  const _SocialBadge(this.text);
+  const _SocialBadge({
+    required this.assetPath,
+    required this.label,
+    this.color,
+    this.gradient,
+  }) : assert(color != null || gradient != null);
 
-  final String text;
+  final String assetPath;
+  final String label;
+  final Color? color;
+  final Gradient? gradient;
 
   @override
-  Widget build(BuildContext context) => Container(
-    width: 27,
-    height: 27,
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-      color: const Color(0xFF242B31),
-      borderRadius: BorderRadius.circular(6),
-    ),
-    child: Text(
-      text,
-      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w900),
+  Widget build(BuildContext context) => Tooltip(
+    message: label,
+    child: Semantics(
+      button: true,
+      label: label,
+      child: Container(
+        width: 31,
+        height: 31,
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: color,
+          gradient: gradient,
+          borderRadius: BorderRadius.circular(7),
+        ),
+        child: SvgPicture.asset(assetPath, excludeFromSemantics: true),
+      ),
     ),
   );
 }

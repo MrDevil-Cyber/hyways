@@ -12,7 +12,29 @@ import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 
-type SafeUser = { id: string; name: string; email: string; role: Role };
+type SafeUser = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  company: string | null;
+  jobTitle: string | null;
+  city: string | null;
+  state: string | null;
+  role: Role;
+};
+
+const safeUserSelect = {
+  id: true,
+  name: true,
+  email: true,
+  phone: true,
+  company: true,
+  jobTitle: true,
+  city: true,
+  state: true,
+  role: true,
+} as const;
 
 type RefreshPayload = {
   sub: string;
@@ -44,9 +66,14 @@ export class AuthService {
       data: {
         name: dto.name.trim(),
         email,
+        phone: dto.phone.trim(),
+        company: dto.company.trim(),
+        jobTitle: dto.jobTitle.trim(),
+        city: dto.city.trim(),
+        state: dto.state.trim(),
         passwordHash: await bcrypt.hash(dto.password, 12),
       },
-      select: { id: true, name: true, email: true, role: true },
+      select: safeUserSelect,
     });
     return this.createSession(user);
   }
@@ -59,17 +86,14 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
     return this.createSession({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
+      ...this.toSafeUser(user),
     });
   }
 
   async me(userId: string): Promise<SafeUser> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, name: true, email: true, role: true },
+      select: safeUserSelect,
     });
     if (!user) throw new UnauthorizedException('User no longer exists');
     return user;
@@ -87,7 +111,7 @@ export class AuthService {
       },
       select: {
         id: true,
-        user: { select: { id: true, name: true, email: true, role: true } },
+        user: { select: safeUserSelect },
       },
     });
     if (!session) throw new UnauthorizedException('Refresh session expired');
@@ -235,5 +259,29 @@ export class AuthService {
 
   private hashToken(token: string): string {
     return createHash('sha256').update(token).digest('hex');
+  }
+
+  private toSafeUser(user: {
+    id: string;
+    name: string;
+    email: string;
+    phone: string | null;
+    company: string | null;
+    jobTitle: string | null;
+    city: string | null;
+    state: string | null;
+    role: Role;
+  }): SafeUser {
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      company: user.company,
+      jobTitle: user.jobTitle,
+      city: user.city,
+      state: user.state,
+      role: user.role,
+    };
   }
 }

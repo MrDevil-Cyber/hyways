@@ -7,16 +7,26 @@ class StoredAuthSession {
     required this.userId,
     required this.name,
     required this.email,
+    this.phone,
+    this.company,
+    this.jobTitle,
+    this.city,
+    this.state,
     required this.role,
     required this.accessToken,
     required this.refreshToken,
   });
 
-  static const version = 1;
+  static const version = 2;
 
   final String userId;
   final String name;
   final String email;
+  final String? phone;
+  final String? company;
+  final String? jobTitle;
+  final String? city;
+  final String? state;
   final String role;
   final String accessToken;
   final String refreshToken;
@@ -26,6 +36,11 @@ class StoredAuthSession {
     'userId': userId,
     'name': name,
     'email': email,
+    'phone': phone,
+    'company': company,
+    'jobTitle': jobTitle,
+    'city': city,
+    'state': state,
     'role': role,
     'accessToken': accessToken,
     'refreshToken': refreshToken,
@@ -45,6 +60,11 @@ class StoredAuthSession {
       userId: requiredString('userId'),
       name: requiredString('name'),
       email: requiredString('email'),
+      phone: json['phone']?.toString().trim(),
+      company: json['company']?.toString().trim(),
+      jobTitle: json['jobTitle']?.toString().trim(),
+      city: json['city']?.toString().trim(),
+      state: json['state']?.toString().trim(),
       role: requiredString('role'),
       accessToken: requiredString('accessToken'),
       refreshToken: requiredString('refreshToken'),
